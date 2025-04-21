@@ -1,39 +1,53 @@
 class Category:
     """
-    Класс для представления категории продуктов.
-
-    Атрибуты:
-        category_count (int): Общее количество созданных категорий.
-        product_count (int): Общее количество продуктов во всех категориях.
-
-    Методы:
-        __init__(name: str, description: str, products: list):
-            Инициализирует объект категории с заданным именем, описанием и списком продуктов.
-        reset_counts():
-            Сбрасывает счетчики категорий и продуктов.
+    Класс, представляющий категорию товаров.
     """
-    category_count = 0
-    product_count = 0
 
-    def __init__(self, name: str, description: str, products: list):
+    # Статический атрибут для хранения общего количества категорий
+    category_count = 0
+
+    def __init__(self, name, description, products):
         """
-        Инициализирует объект категории.
+        Инициализация новой категории.
 
         Параметры:
             name (str): Название категории.
             description (str): Описание категории.
-            products (list): Список продуктов, принадлежащих этой категории.
-
-        Увеличивает счетчик категорий и счетчик продуктов на основе переданного списка.
+            products (list): Список продуктов в категории.
         """
         self.name = name
         self.description = description
-        self.products = products
-        Category.category_count += 1
-        Category.product_count += len(products)
+        self.__products = products  # Приватный атрибут списка товаров
+        self.product_count = len(products)
+        Category.category_count += 1  # Увеличение общего количества категорий
 
     @classmethod
     def reset_counts(cls):
-        """Сбрасывает счетчики категорий и продуктов."""
+        """
+        Сброс общего количества категорий и продуктов.
+        """
         cls.category_count = 0
-        cls.product_count = 0
+
+    def add_product(self, product):
+        """
+        Добавление продукта в категорию.
+
+        Параметры:
+            product (Product): Продукт, который нужно добавить в категорию.
+        """
+        self.__products.append(product)  # Добавление продукта в список
+        self.product_count += 1  # Увеличение счетчика продуктов
+
+    @property
+    def products(self):
+        """
+        Получение строкового представления всех продуктов в категории.
+
+        Возвращает:
+            str: Строка с информацией о каждом продукте в категории,
+                 включая название, цену и остаток на складе.
+        """
+        return "\n".join(
+            f"{product.name}, {product.price} руб. Остаток: {product.quantity} шт."
+            for product in self.__products
+        )
