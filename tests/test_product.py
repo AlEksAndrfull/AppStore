@@ -2,23 +2,50 @@ import pytest
 from src.product import Product
 
 
-@pytest.mark.parametrize("product_data, expected_name, expected_description", [
-    ({"name": "Тестовый продукт 1", "description": "Описание продукта 1", "price": 100.0, "quantity": 10},
-     "Тестовый продукт 1", "Описание продукта 1"),
-    ({"name": "Тестовый продукт 2", "description": "Описание продукта 2", "price": 200.0, "quantity": 5},
-     "Тестовый продукт 2", "Описание продукта 2"),
+@pytest.mark.parametrize("product_name, expected_str", [
+    ("Samsung Galaxy S23 Ultra", "Samsung Galaxy S23 Ultra, 180000.0 руб. Остаток: 5 шт."),
+    ("Iphone 15", "Iphone 15, 210000.0 руб. Остаток: 8 шт."),
 ])
-def test_new_product(product_data, expected_name, expected_description):
-    product = Product.new_product(product_data)
-    assert product.name == expected_name
-    assert product.description == expected_description
+def test_product_str(product_name, expected_str):
+    """
+    Тестирует строковое представление продукта.
+
+    :param product_name: Название тестируемого продукта.
+    :param expected_str: Ожидаемая строка для сравнения.
+    """
+    product = Product(
+        product_name,
+        "Описание",
+        180000.0 if product_name == "Samsung Galaxy S23 Ultra" else 210000.0,
+        5 if product_name == "Samsung Galaxy S23 Ultra" else 8
+    )
+    assert str(product) == expected_str
 
 
-@pytest.mark.parametrize("initial_price, new_price, expected_price", [
-    (100.0, 150.0, 150.0),
-    (200.0, -50.0, 200.0),
-])
-def test_price_setter(initial_price, new_price, expected_price):
-    product = Product("Тестовый продукт", "Описание продукта", initial_price, 10)
-    product.price = new_price
-    assert product.price == expected_price
+@pytest.mark.parametrize(
+    "product_a_price, product_a_quantity, product_b_price, product_b_quantity, expected_sum",
+    [
+        (180000.0, 5, 210000.0, 8, (180000.0 * 5) + (210000.0 * 8)),
+        (31000.0, 14, 20000.0, 10, (31000.0 * 14) + (20000.0 * 10)),
+    ]
+)
+def test_product_add(
+    product_a_price,
+    product_a_quantity,
+    product_b_price,
+    product_b_quantity,
+    expected_sum
+):
+    """
+    Тестирует сложение двух продуктов.
+
+    :param product_a_price: Цена первого продукта.
+    :param product_a_quantity: Количество первого продукта.
+    :param product_b_price: Цена второго продукта.
+    :param product_b_quantity: Количество второго продукта.
+    :param expected_sum: Ожидаемая сумма стоимости двух продуктов.
+    """
+    product_a = Product("Product A", "Описание A", product_a_price, product_a_quantity)
+    product_b = Product("Product B", "Описание B", product_b_price, product_b_quantity)
+
+    assert (product_a + product_b) == expected_sum
