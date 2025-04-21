@@ -3,21 +3,29 @@ from src.category import Category
 from src.product import Product
 
 
-def test_add_product():
-    category = Category("Тестовая категория", "Описание категории", [])
-    product = Product("Тестовый продукт", "Описание продукта", 100.0, 10)
-    category.add_product(product)
-    assert category.product_count == 1
-
-
-@pytest.mark.parametrize("products_data, expected_output", [
-    ([{"name": "Продукт A", "description": "Описание A", "price": 100.0, "quantity": 10},
-      {"name": "Продукт B", "description": "Описание B", "price": 200.0, "quantity": 5}],
-     "Продукт A, 100.0 руб. Остаток: 10 шт.\nПродукт B, 200.0 руб. Остаток: 5 шт."),
+@pytest.mark.parametrize("products, expected_str", [
+    (
+        [
+            Product("Samsung Galaxy S23 Ultra", "256GB, Серый цвет", 180000.0, 5),
+            Product("Iphone 15", "512GB, Gray space", 210000.0, 8),
+            Product("Xiaomi Redmi Note 11", "1024GB, Синий", 31000.0, 14)
+        ],
+        "Смартфоны, количество продуктов: 27 шт."
+    ),
+    (
+        [
+            Product("MacBook Pro", "16GB RAM, 512GB SSD", 150000.0, 3),
+            Product("Dell XPS 13", "16GB RAM, 256GB SSD", 120000.0, 2)
+        ],
+        "Ноутбуки, количество продуктов: 5 шт."
+    )
 ])
-def test_products_property(products_data, expected_output):
-    category = Category("Тестовая категория", "Описание категории", [])
-    for data in products_data:
-        product = Product(data["name"], data["description"], data["price"], data["quantity"])
-        category.add_product(product)
-    assert category.products == expected_output
+def test_category_str(products, expected_str):
+    """
+    Тестирует строковое представление категории продуктов.
+
+    :param products: Список продуктов в категории.
+    :param expected_str: Ожидаемая строка для сравнения.
+    """
+    category = Category("Смартфоны" if len(products) == 3 else "Ноутбуки", "Описание категории", products)
+    assert str(category) == expected_str
