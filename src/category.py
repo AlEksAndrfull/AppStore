@@ -3,7 +3,6 @@ class Category:
     Класс, представляющий категорию товаров.
     """
 
-    # Статический атрибут для хранения общего количества категорий
     category_count = 0
 
     def __init__(self, name, description, products):
@@ -17,9 +16,9 @@ class Category:
         """
         self.name = name
         self.description = description
-        self.__products = products  # Приватный атрибут списка товаров
+        self.__products = products
         self.product_count = len(products)
-        Category.category_count += 1  # Увеличение общего количества категорий
+        Category.category_count += 1
 
     @classmethod
     def reset_counts(cls):
@@ -35,8 +34,8 @@ class Category:
         Параметры:
             product (Product): Продукт, который нужно добавить в категорию.
         """
-        self.__products.append(product)  # Добавление продукта в список
-        self.product_count += 1  # Увеличение счетчика продуктов
+        self.__products.append(product)
+        self.product_count += 1
 
     @property
     def products(self):
