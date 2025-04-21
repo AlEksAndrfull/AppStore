@@ -3,14 +3,21 @@ from src.category import Category
 from src.product import Product
 
 
-@pytest.mark.parametrize("products_data, expected_count", [
-    ([Product("Product A", "Description A", 50.0, 5),
-      Product("Product B", "Description B", 75.0, 3)], 2),
-    ([Product("Product C", "Description C", 100.0, 10)], 1),
-])
-def test_category_initialization(products_data, expected_count):
-    category = Category("Test Category", "Test Description", products_data)
+def test_add_product():
+    category = Category("Тестовая категория", "Описание категории", [])
+    product = Product("Тестовый продукт", "Описание продукта", 100.0, 10)
+    category.add_product(product)
+    assert category.product_count == 1
 
-    assert category.name == "Test Category"
-    assert category.description == "Test Description"
-    assert len(category.products) == expected_count
+
+@pytest.mark.parametrize("products_data, expected_output", [
+    ([{"name": "Продукт A", "description": "Описание A", "price": 100.0, "quantity": 10},
+      {"name": "Продукт B", "description": "Описание B", "price": 200.0, "quantity": 5}],
+     "Продукт A, 100.0 руб. Остаток: 10 шт.\nПродукт B, 200.0 руб. Остаток: 5 шт."),
+])
+def test_products_property(products_data, expected_output):
+    category = Category("Тестовая категория", "Описание категории", [])
+    for data in products_data:
+        product = Product(data["name"], data["description"], data["price"], data["quantity"])
+        category.add_product(product)
+    assert category.products == expected_output
