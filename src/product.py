@@ -1,69 +1,31 @@
 class Product:
-    """
-    Класс, представляющий продукт.
-
-    Атрибуты:
-        name (str): Название продукта.
-        description (str): Описание продукта.
-        __price (float): Цена продукта (приватный атрибут).
-        quantity (int): Количество продукта на складе.
-    """
+    """Класс, представляющий продукт."""
 
     def __init__(self, name, description, price, quantity):
         """
-        Инициализация нового продукта.
+        Инициализация продукта.
 
-        Параметры:
-            name (str): Название продукта.
-            description (str): Описание продукта.
-            price (float): Цена продукта.
-            quantity (int): Количество продукта на складе.
+        :param name: Название продукта.
+        :param description: Описание продукта.
+        :param price: Цена продукта.
+        :param quantity: Количество продукта на складе.
         """
         self.name = name
         self.description = description
-        self.__price = price
+        self.price = price
         self.quantity = quantity
 
-    @property
-    def price(self):
+    def __str__(self):
+        """Возвращает строковое представление продукта."""
+        return f"{self.name}, {self.price} руб. Остаток: {self.quantity} шт."
+
+    def __add__(self, other):
         """
-        Получение цены продукта.
+        Сложение двух продуктов.
 
-        Возвращает:
-            float: Цена продукта.
+        :param other: Другой продукт для сложения.
+        :return: Сумма стоимости двух продуктов.
         """
-        return self.__price
-
-    @price.setter
-    def price(self, new_price):
-        """
-        Установка новой цены для продукта.
-
-        Параметры:
-            new_price (float): Новая цена продукта.
-
-        Если новая цена меньше или равна нулю, выводится сообщение об ошибке.
-        """
-        if new_price > 0:
-            self.__price = new_price
-        else:
-            print("Цена не должна быть нулевая или отрицательная")
-
-    @classmethod
-    def new_product(cls, product_dict):
-        """
-        Создание нового экземпляра продукта из словаря.
-
-        Параметры:
-            product_dict (dict): Словарь с данными о продукте.
-                                 Должен содержать ключи: "name", "description", "price", "quantity".
-
-        Возвращает:
-            Product: Новый экземпляр класса Product.
-        """
-        return cls(
-            product_dict["name"],
-            product_dict["description"],
-            product_dict["price"],
-            product_dict["quantity"]
-        )
+        if isinstance(other, Product):
+            return (self.price * self.quantity) + (other.price * other.quantity)
+        return NotImplemented
